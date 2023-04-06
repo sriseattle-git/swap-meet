@@ -18,4 +18,4 @@ class Item:
         return type(self).__name__
     
     def condition_description(self):
-        return CONDITION_DESCRIPTORS[self.condition]
+        return CONDITION_DESCRIPTORS[int(self.condition)]

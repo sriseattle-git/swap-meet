@@ -50,13 +50,34 @@ class Vendor:
             return False
         
         # Remove 1st Item from my inventory and add 1st item from other vendor's inventory
-        temp_item = self.remove(self.inventory[0])
-        self.add(other_vendor.inventory[0])
-
-        # Remove 1st Item from other vendor's inventory and add 1st item from my inventory        
-        other_vendor.remove(other_vendor.inventory[0])
-        other_vendor.add(temp_item)
-
-        return True
+        return self.swap_items(other_vendor, self.inventory[0], other_vendor.inventory[0])
     
+    def get_by_category(self, category):
+        items_in_category = []
+        if self.inventory:
+            for item in self.inventory:
+                if item.get_category() == category:
+                    items_in_category.append(item)
+
+        return items_in_category
+    
+    def get_best_by_category(self, category):
+        best_item_by_cat = None
+        if self.inventory:
+            highest_cat = 0
+            for item in self.inventory:
+                if item.get_category() == category and item.condition >= highest_cat:
+                    highest_cat = item.condition
+                    best_item_by_cat = item
+
+        return best_item_by_cat
+
+    def swap_best_by_category(self, other_vendor, my_priority, their_priority):
+        my_best_cat_item = other_vendor.get_best_by_category(my_priority)
+        their_best_cat_item = self.get_best_by_category(their_priority)
+
+        if my_best_cat_item and their_best_cat_item:
+            return self.swap_items(other_vendor, their_best_cat_item, my_best_cat_item)
+        else:
+            return False
 
